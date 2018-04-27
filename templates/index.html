@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+     <title>Test</title>
+   		<script type="text/javascript">
+		 var data = JSON.parse('{{ data | tojson | safe}}');
+		 console.log(data);
+   		</script>
+  </head>
+  <body>
+    <form action='/learn_face' method='get'>
+      <input type="text" name="name"/>
+      <input type="submit" />
+    </form>
+    <form action='/stop_learn' method='post'>
+      <input type="hidden" name="stop" value="true"/>
+      <input type="submit" value = "stop"/>
+    </form>
+  </body>
+</html> 
+<html>
+

@@ -3,58 +3,103 @@ import cv2 as cv2
 import os
 from PIL import Image
 from io import StringIO
+import time
 
 import boto3
-# Create an S3 client
-AWS_ACCESS_KEY = '***'
-AWS_ACCESS_SECRET_KEY = '***'
-s3 = boto3.client(
-    's3',
-    aws_access_key_id=AWS_ACCESS_KEY,
-    aws_secret_access_key=AWS_ACCESS_SECRET_KEY
-)
-
-# Call S3 to list current buckets
-response = s3.list_buckets()
-print(response)
-# Get a list of all bucket names from the response
+from flask import Flask, request, render_template,redirect, url_for,session
 
 
-HAR_CLAS = "haarcascade_frontalface_alt.xml"
-face_cascade = cv2.CascadeClassifier(HAR_CLAS)
-cam = cv2.VideoCapture(0)
-i=0
-while(True):
-    ret, img = cam.read() # we got image
-    faces = face_cascade.detectMultiScale(img, 1.6, 6)
+app = Flask(__name__)
+app.secret_key = '***'
+cam = None
 
-    # now see if there are faces
-    if(len(faces)!=0):
-
-      print("Psst! "+str(len(faces))+" peep(s) at the door!")
-      for (x,y,w,h) in faces:
-        cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0), 2) # red box around the face
-        # ... do your stuff, e.g. image sharpening, cropping, etc. ... 
-        # ... I used AWS CLI to upload these images to S3
-        
-
-        #file = open('testing.txt', 'r+')
-
-        image = Image.fromarray(img, 'RGB')
-        image.save('0.png')
-
-        s3.upload_file('0.png', 'facialrecognitionimages01', str(i)+'.png',ExtraArgs={'ACL': 'public-read'})
-        i=i+1
-        #s3.upload_fileobj(image, 'facialrecognitionimages', str(i))
+@app.route("/")
+def index():
+    return render_template('index.html',data = '')
 
 
+@app.route("/learn_face", methods=['GET', 'POST'])
+def learn_face():
+    if request.method == 'GET':
+        session['stop'] = None
+        start = time.time()
+
+        # Create an S3 client
+        AWS_ACCESS_KEY = '***'
+        AWS_ACCESS_SECRET_KEY = '***'
+        s3 = boto3.client(
+            's3',
+            aws_access_key_id=AWS_ACCESS_KEY,
+            aws_secret_access_key=AWS_ACCESS_SECRET_KEY
+        )
+
+        # Call S3 to list current buckets
+        response = s3.list_buckets()
+        print(response)
+        # Get a list of all bucket names from the response
+
+
+        HAR_CLAS = "haarcascade_frontalface_alt.xml"
+        face_cascade = cv2.CascadeClassifier(HAR_CLAS)
+        cam = cv2.VideoCapture(0)
+        i=0
+        runtime = 0
+        while(session.get('stop') is None ):
+            if session.get('person') is not None:
+                cam.release()
+                cv2.destroyAllWindows()
+                return render_template('index.html',data = session.get('person'))
+            runtime+=1
+            ret, img = cam.read() # we got image
+            faces = face_cascade.detectMultiScale(img, 1.6, 6)
+
+            # now see if there are faces
+            if(len(faces)!=0):
+              print(request.args['name'])
+              print("Psst! "+str(len(faces))+" peep(s) at the door!")
+              for (x,y,w,h) in faces:
+                cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0), 2) # red box around the face
+                # ... do your stuff, e.g. image sharpening, cropping, etc. ... 
+                # ... I used AWS CLI to upload these images to S3
+                
+
+                #file = open('testing.txt', 'r+')
+
+                image = Image.fromarray(img, 'RGB')
+                image.save('Learn-'+str(request.args['name'])+'-0.png')
+
+                s3.upload_file('Learn-'+str(request.args['name'])+'-0.png', 'facialrecognitionimages02', 'Learn-'+str(request.args['name'])+'-'+str(i)+'.png',ExtraArgs={'ACL': 'public-read'})
+                i=i+1
+                break
+            end = time.time()
+            if (end - start) >25:
+                break
 
 
 
 
-cam.release()
-cv2.destroyAllWindows()
 
+
+        cam.release()
+        cv2.destroyAllWindows()
+        return render_template('index.html',data = '')
+
+
+@app.route("/stop_learn", methods=['POST'])
+def stop_learn():
+    session['stop'] = request.form['stop']
+    return render_template('index.html',data = '')
+
+@app.route("/found_face", methods=['GET'])
+def found_face():
+    session['person'] = request.args['found']
+    return render_template('index.html',data = '')
+
+
+if __name__ == '__main__':
+    #try to save to file through requests?
+
+    app.run(host='0.0.0.0')
 
 
 
