@@ -17,28 +17,21 @@
           margin-bottom: 20px;
         }
 
-        .learn_face{
-          margin: auto;
-          width: 50%;
-        }
+       
       </style>
   </head>
   <body>
     <div class='options_form'>
-
-    <form action='/find_face' method='post'>
-      <input type="submit" value= "Knock"/>
+    <form  action='/learn_face' method='post'>
+      <input type="text" name="name"/>
+      <input type="submit" value= "learn"/>
     </form>
     <form action='/stop_learn' method='post'>
       <input type="hidden" name="stop" value="true"/>
       <input type="submit" value = "stop"/>
     </form>
     <div style="height: 20px"></div>
-    <form id='learn_face' action='/learn' method='post'>
-      <label for="name">Password</label><input type="password" name="password"/>
-      <br>
-      <input type="submit" value= "Learn Mode"/>
-    </form>
+    <a href="/" >Identify Mode</a>
   </div>
   </body>
 </html> 
