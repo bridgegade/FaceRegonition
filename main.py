@@ -9,7 +9,7 @@ from flask import Flask, request, render_template,redirect, url_for,session
 
 
 app = Flask(__name__)
-app.secret_key = '***'
+app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 cam = None
 
 @app.route("/")
@@ -35,8 +35,8 @@ def learn_face():
             start = time.time()
 
             # Create an S3 client
-            AWS_ACCESS_KEY = '***'
-            AWS_ACCESS_SECRET_KEY = '***'
+            AWS_ACCESS_KEY = 'AKIAIYLRJMDLSAI5WFBA'
+            AWS_ACCESS_SECRET_KEY = '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'
             s3 = boto3.client(
                 's3',
                 aws_access_key_id=AWS_ACCESS_KEY,
@@ -105,8 +105,8 @@ def find_face():
         start = time.time()
 
         # Create an S3 client
-        AWS_ACCESS_KEY = '***'
-        AWS_ACCESS_SECRET_KEY = '***'
+        AWS_ACCESS_KEY = 'AKIAIYLRJMDLSAI5WFBA'
+        AWS_ACCESS_SECRET_KEY = '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'
         s3 = boto3.client(
             's3',
             aws_access_key_id=AWS_ACCESS_KEY,

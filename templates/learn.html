@@ -2,11 +2,33 @@
 <html>
   <head>
      <title>Face Recognition</title>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
    		<script type="text/javascript">
+
 		 var data = JSON.parse('{{ data | tojson | safe}}');
 		 if (data!= ''){
 		 	alert(data);
 		 }
+
+     $(document).ready(function(){
+          $("#learn").click(function(){
+            let i =25;
+            setInterval(function(){
+
+             $("#time-left").html("Time Left: "+i);
+             i--;
+           }, 1000);
+
+              
+          });
+
+          $("#stop").click(function(){
+            $("#time-left").html("");
+          });
+      });
+
+
    		</script>
       <style type="text/css">
         .options_form{
@@ -24,15 +46,17 @@
     <div class='options_form'>
     <form  action='/learn_face' method='post'>
       <input type="text" name="name"/>
-      <input type="submit" value= "learn"/>
+      <input id ="learn" type="submit" value= "learn"/>
     </form>
     <form action='/stop_learn' method='post'>
       <input type="hidden" name="stop" value="true"/>
-      <input type="submit" value = "stop"/>
+      <input id="stop" type="submit" value = "stop"/>
     </form>
     <div style="height: 20px"></div>
     <a href="/" >Identify Mode</a>
+    <p id="time-left"></p>
   </div>
+  
   </body>
 </html> 
 <html>
