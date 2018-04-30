@@ -35,8 +35,8 @@ def learn_face():
             start = time.time()
 
             # Create an S3 client
-            AWS_ACCESS_KEY = 'AKIAJU5C3RKWQ7PVBMRA'
-            AWS_ACCESS_SECRET_KEY = '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'
+            AWS_ACCESS_KEY = 'AKIAJY32U7FW46ASWYKA'
+            AWS_ACCESS_SECRET_KEY = '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'
             s3 = boto3.client(
                 's3',
                 aws_access_key_id=AWS_ACCESS_KEY,
@@ -105,8 +105,8 @@ def find_face():
         start = time.time()
 
         # Create an S3 client
-        AWS_ACCESS_KEY = 'AKIAJU5C3RKWQ7PVBMRA'
-        AWS_ACCESS_SECRET_KEY = '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'
+        AWS_ACCESS_KEY = 'AKIAJY32U7FW46ASWYKA'
+        AWS_ACCESS_SECRET_KEY = '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'
         s3 = boto3.client(
             's3',
             aws_access_key_id=AWS_ACCESS_KEY,
